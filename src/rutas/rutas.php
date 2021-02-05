@@ -220,12 +220,61 @@ $app->get('/api/vehiculos/{id}', function (Request $request, Response $response)
 });
 
 
+
+$app->post('/api/nuevovehiculo', function (Request $request, Response $response) {
+
+
+    $parametros = $request->getParsedBody();
+
+    $nombre = $parametros['nombre'];
+    $imagen = $parametros['imagen'];
+    $descripcion = $parametros['descripcion'];
+    $categoria = $parametros['categoria'];
+    $resistencia = $parametros['resistencia'];
+    $marca = $parametros['marca'];
+    $velocidad = $parametros['velocidad'];
+    $tipo = $parametros['tipo'];
+
+
+    $sql = "INSERT INTO `vehiculo` (`idvehiculo`, `nombre_vehiculo`, `imagen_vehiculo`, `descripcion_vehiculo`, `categoria_vehiculo`, `resistencia`, `marca`, `velocidad`, `tipo_vehiculo`) 
+    VALUES (NULL, :nombre, :imagen, :descripcion, :categoria, :resistencia, :marca, :velocidad, :tipo)";
+
+
+    try {
+        $db = new db();
+        $db = $db->conexionDB();
+        $resultado = $db->prepare($sql);
+        $resultado->bindParam(':nombre', $nombre);
+        $resultado->bindParam(':imagen', $imagen);
+        $resultado->bindParam(':descripcion', $descripcion);
+        $resultado->bindParam(':categoria', $categoria);
+        $resultado->bindParam(':resistencia', $resistencia);
+        $resultado->bindParam(':marca', $marca);
+        $resultado->bindParam(':velocidad', $velocidad);
+        $resultado->bindParam(':tipo', $tipo);
+
+        $resultado->execute();
+        $status = $response->getStatusCode();
+        $response->getBody()->write(json_encode($status));
+        return $response;
+    } catch (PDOException $e) {
+        echo '{"error":{"text":' . $e . '}';
+    }
+});
+
+
+
+
+
+
+
+
 //------------ RUTAS DE NOTIFICACIONES --------------------------
 
 
 $app->get('/api/notificaciones', function (Request $request, Response $response) {
 
-  
+
 
     $sql = "SELECT idNotificacion as 'id' ,imagen_url , mensajeNotificacion as 'mensaje' , descripcion , 
     fechaNotificacion as 'fecha' from notificaciones ORDER BY  fechaNotificacion desc";
@@ -268,4 +317,3 @@ $app->get('/api/notificaciones/{idnotificacion}', function (Request $request, Re
         echo '{"error":{"text":' . $e . '}';
     }
 });
-
