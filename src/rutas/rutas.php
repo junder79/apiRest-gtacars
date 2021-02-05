@@ -256,7 +256,9 @@ $app->post('/api/nuevovehiculo', function (Request $request, Response $response)
         $resultado->execute();
         $status = $response->getStatusCode();
         $response->getBody()->write(json_encode($status));
-        return $response;
+        return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus(200);
     } catch (PDOException $e) {
         echo '{"error":{"text":' . $e . '}';
     }
@@ -276,7 +278,9 @@ $app->delete('/api/eliminar/{id}', function (Request $request, Response $respons
         $resultado->execute();
         $status = $response->getStatusCode();
         $response->getBody()->write(json_encode($status));
-        return $response;
+        return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus(200);
     } catch (PDOException $e) {
         echo '{"error":{"text":' . $e . '}';
     }
