@@ -263,7 +263,31 @@ $app->post('/api/nuevovehiculo', function (Request $request, Response $response)
 });
 
 
+$app->delete('/api/eliminar/{id}', function (Request $request, Response $response) {
 
+
+    $idVehiculo = $request->getAttribute('id');
+
+   
+
+
+    $sql = "DELETE  from vehiculo WHERE idvehiculo = :idvehiculo ";
+
+
+    try {
+        $db = new db();
+        $db = $db->conexionDB();
+        $resultado = $db->prepare($sql);
+        $resultado->bindParam(':idvehiculo', $idVehiculo);
+       
+        $resultado->execute();
+        $status = $response->getStatusCode();
+        $response->getBody()->write(json_encode($status));
+        return $response;
+    } catch (PDOException $e) {
+        echo '{"error":{"text":' . $e . '}';
+    }
+});
 
 
 
