@@ -13,8 +13,8 @@ require_once '../src/config/db.php';
 
 // Rutas
 
-require '../src/rutas/vehiculos.php';
-require '../src/rutas/notificaciones.php';
+require '../src/rutas/rutas.php';
+
 
 
 // Add error middleware
