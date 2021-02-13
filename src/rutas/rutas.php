@@ -12,7 +12,15 @@ $app = AppFactory::create();
 // Obtener todos los vehiculos 
 
 $app->get('/api/all', function (Request $request, Response $response) {
-    $sql = "SELECT * from vehiculo";
+    $sql = "SELECT v.idvehiculo,v.nombre_vehiculo,v.descripcion_vehiculo , cv.nombre_categoria , r.resistencia,v.marca , vv.velocidad , tp.nombre_tipo_vehiculo , v.imagen_vehiculo FROM `vehiculo` as  v
+    join categoria_vehiculo cv
+    on cv.id_categoria = v.categoria_vehiculo
+    join resistencia_vehiculo r 
+    on r.idresistencia = v.resistencia
+    join velocidad_vehiculo vv
+    on vv.idvelocidad = v.velocidad
+    JOIN tipo_vehiculo tp 
+    on tp.idtipovehiculo = v.tipo_vehiculo";
     try {
         $db = new db();
         $db = $db->conexionDB();
