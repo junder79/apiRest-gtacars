@@ -19,8 +19,12 @@ $app->get('/api/all', function (Request $request, Response $response) {
         $resultado = $db->query($sql);
         if ($resultado->rowCount() > 0) {
             $vehiculos = $resultado->fetchAll(PDO::FETCH_OBJ);
-
+            
             $response->getBody()->write(json_encode($vehiculos));
+            return $response
+            ->withHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
         } else {
             $response->getBody()->write(json_encode("No hay data"));
         }
@@ -284,10 +288,10 @@ $app->post('/api/nuevovehiculo', function (Request $request, Response $response)
 
         $resultado->execute();
         $status = $response->getStatusCode();
-        $response->getBody()->write(json_encode($status));
         return $response
-        ->withHeader('Content-Type', 'application/json')
-        ->withStatus(200);
+        ->withHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     } catch (PDOException $e) {
         echo '{"error":{"text":' . $e . '}';
     }
