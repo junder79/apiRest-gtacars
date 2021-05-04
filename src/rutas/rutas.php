@@ -27,12 +27,12 @@ $app->get('/api/all', function (Request $request, Response $response) {
         $resultado = $db->query($sql);
         if ($resultado->rowCount() > 0) {
             $vehiculos = $resultado->fetchAll(PDO::FETCH_OBJ);
-            
+
             $response->getBody()->write(json_encode($vehiculos));
             return $response
-            ->withHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
-            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+                ->withHeader('Access-Control-Allow-Origin', 'http://gtavehicles.000webhostapp.com')
+                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
         } else {
             $response->getBody()->write(json_encode("No hay data"));
         }
@@ -297,31 +297,32 @@ $app->post('/api/nuevovehiculo', function (Request $request, Response $response)
         $resultado->execute();
         $status = $response->getStatusCode();
         return $response
-        ->withHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
-        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+            ->withHeader('Access-Control-Allow-Origin', 'http://gtavehicles.000webhostapp.com')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     } catch (PDOException $e) {
         echo '{"error":{"text":' . $e . '}';
     }
 });
 
 
-$app->delete('/api/eliminar/{id}', function (Request $request, Response $response) {
+$app->post('/api/eliminar', function (Request $request, Response $response) {
 
-    $idVehiculo = $request->getAttribute('id');
-    $sql = "DELETE  from vehiculo WHERE idvehiculo = :idvehiculo ";
+    $parametros = $request->getParsedBody();
+
+    $idVehiculo = $parametros['id'];
+    $sql = "DELETE from vehiculo WHERE idvehiculo = $idVehiculo";
     try {
         $db = new db();
         $db = $db->conexionDB();
         $resultado = $db->prepare($sql);
-        $resultado->bindParam(':idvehiculo', $idVehiculo);
-       
+
         $resultado->execute();
         $status = $response->getStatusCode();
-        $response->getBody()->write(json_encode($status));
         return $response
-        ->withHeader('Content-Type', 'application/json')
-        ->withStatus(200);
+            ->withHeader('Access-Control-Allow-Origin', 'http://gtavehicles.000webhostapp.com')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     } catch (PDOException $e) {
         echo '{"error":{"text":' . $e . '}';
     }
@@ -378,4 +379,43 @@ $app->get('/api/notificaciones/{idnotificacion}', function (Request $request, Re
     } catch (PDOException $e) {
         echo '{"error":{"text":' . $e . '}';
     }
+});
+
+
+/* --------- AUTENTICACION CON USUARIO ---------------- */
+
+$app->post('/api/login', function (Request $request, Response $response) {
+
+    $parametros = $request->getParsedBody();
+
+    $nombreUsuario = $parametros['nombreUsuario'];
+    $password = $parametros['password'];
+    include_once('../config/password_encriptar_desencriptar.php');
+    $Password = new password();
+    $key = "1235@";
+    $sql_get_datos = "SELECT password , nombreUsuario from usuario where nombreUsuario = '$nombreUsuario' ";
+    $sql_get_datos = mysqli_query($conexion, $sql_get_datos);
+    $sql_get_datos = mysqli_fetch_array($sql_get_datos);
+    $sql_get_datos = $sql_get_datos["nombreUsuario"];
+    $passow_D =  $Password->decrypt($sql_get_datos, $key);
+    if ($passow_D == $contrasena) {
+        //LOGEADO
+    } else {
+    }
+    // $sql = "DELETE from vehiculo WHERE idvehiculo = $idVehiculo";
+    // try {
+    //     $db = new db();
+    //     $db = $db->conexionDB();
+    //     $resultado = $db->prepare($sql);
+
+    //     $resultado->execute();
+    //     $status = $response->getStatusCode();
+    //     return $response
+    //     ->withHeader('Access-Control-Allow-Origin', 'http://gtavehicles.000webhostapp.com')
+    //     ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+    //     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    // } catch (PDOException $e) {
+    //     echo '{"error":{"text":' . $e . '}';
+
+    // }
 });
