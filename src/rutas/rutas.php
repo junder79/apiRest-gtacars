@@ -11,36 +11,40 @@ $app = AppFactory::create();
 
 // Obtener todos los vehiculos 
 
-$app->get('/api/all', function (Request $request, Response $response) {
-    $sql = "SELECT v.idvehiculo,v.nombre_vehiculo,v.descripcion_vehiculo , cv.nombre_categoria , r.resistencia,v.marca , vv.velocidad , tp.nombre_tipo_vehiculo , v.imagen_vehiculo FROM `vehiculo` as  v
-    join categoria_vehiculo cv
-    on cv.id_categoria = v.categoria_vehiculo
-    join resistencia_vehiculo r 
-    on r.idresistencia = v.resistencia
-    join velocidad_vehiculo vv
-    on vv.idvelocidad = v.velocidad
-    JOIN tipo_vehiculo tp 
-    on tp.idtipovehiculo = v.tipo_vehiculo";
-    try {
-        $db = new db();
-        $db = $db->conexionDB();
-        $resultado = $db->query($sql);
-        if ($resultado->rowCount() > 0) {
-            $vehiculos = $resultado->fetchAll(PDO::FETCH_OBJ);
+// $app->get('/api/all', function (Request $request, Response $response) {
+//     $sql = "SELECT v.idvehiculo,v.nombre_vehiculo,v.descripcion_vehiculo , cv.nombre_categoria , r.resistencia,v.marca , vv.velocidad , tp.nombre_tipo_vehiculo , v.imagen_vehiculo FROM `vehiculo` as  v
+//     join categoria_vehiculo cv
+//     on cv.id_categoria = v.categoria_vehiculo
+//     join resistencia_vehiculo r 
+//     on r.idresistencia = v.resistencia
+//     join velocidad_vehiculo vv
+//     on vv.idvelocidad = v.velocidad
+//     JOIN tipo_vehiculo tp 
+//     on tp.idtipovehiculo = v.tipo_vehiculo";
+//     try {
+//         $db = new db();
+//         $db = $db->conexionDB();
+//         $resultado = $db->query($sql);
+//         if ($resultado->rowCount() > 0) {
+//             $vehiculos = $resultado->fetchAll(PDO::FETCH_OBJ);
 
-            $response->getBody()->write(json_encode($vehiculos));
-            return $response
-                ->withHeader('Access-Control-Allow-Origin', 'http://gtavehicles.000webhostapp.com')
-                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-        } else {
-            $response->getBody()->write(json_encode("No hay data"));
-        }
-        return $response;
-    } catch (PDOException $e) {
-        echo '{"error":{"text":' . $e . '}';
-    }
-});
+//             $response->getBody()->write(json_encode($vehiculos));
+//             return $response;
+//                 // ->withHeader('Access-Control-Allow-Origin', 'http://gtavehicles.000webhostapp.com')
+//                 // ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+//                 // ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+//         } else {
+//             $response->getBody()->write(json_encode("No hay data"));
+//         }
+//         return $response;
+//     } catch (PDOException $e) {
+//         echo '{"error":{"text":' . $e . '}';
+//     }
+// });
+$app->get("/api/all", function(Request $request, Response $response) {
+    print("Hello world!");
+    return $response;
+    });
 
 
 $app->get('/api/vehiculos', function (Request $request, Response $response) {

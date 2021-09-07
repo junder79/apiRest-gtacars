@@ -7,17 +7,21 @@ use Slim\Factory\AppFactory;
 require __DIR__ . '/../vendor/autoload.php';
 
 // Instantiate App
-
 $app = AppFactory::create();
-require_once '../src/config/db.php';
-
-// Rutas
-
-require '../src/rutas/rutas.php';
-
-
 
 // Add error middleware
 $app->addErrorMiddleware(true, true, true);
-$app->setBasePath('/api-rest/public');
+
+// Add routes
+$app->get('/', function (Request $request, Response $response) {
+    $response->getBody()->write('<a href="/hello/world">Try /hello/world</a>');
+    return $response;
+});
+
+$app->get('/hello/{name}', function (Request $request, Response $response, $args) {
+    $name = $args['name'];
+    $response->getBody()->write("Hello, $name");
+    return $response;
+});
+
 $app->run();
